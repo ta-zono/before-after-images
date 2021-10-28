@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://pixijs.download/release/pixi.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.8.0/gsap.min.js"></script>
+    <script src="./index.js"></script>
+    <title>BeforeAfter</title>
+</head>
+<body>
+    <h3>このサイトについて</h3>
+    <div>全ての動作をブラウザにて処理していますので、お使いのスマホやパソコンによっては時間がかかる場合があります。</div>
+    <div id="app">
+        <details v-bind:open="step == 1 ? true : null">
+            <summary>画像準備</summary>
+            <div>
+                <div>
+                    <label class="">
+                        Before:
+                    <input class="file-button" type="file"
+@change="beforeLoad" />
+                    </label>
+                </div>
+
+                <div>
+                    <label class="">
+                        After:
+                    <input class="file-button" type="file"
+@change="afterLoad" />
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <details  v-bind:open="step == 2 ? true : null" v-if="step >= 2">
+            <summary>画像調整</summary>
+            <div style="margin-left:2em;">
+                <details>
+                    <summary>Before</summary>
+                    <button v-if="!exitMoveImageMode"
+@click="moveBeforeImage">画像動かす</button>
+                    <label v-if="!exitMoveImageMode" >
+                        拡大率:
+                        <input  type="range" min="50" max="300"
+value="100" @input="changeBeforeScale($event)">
+                    </label>
+                    <button v-if="!exitMoveImageMode"
+@click="changeBeforeScale($event, true)">拡大リセット</button>
+                </details>
+                <details>
+                    <summary>After</summary>
+                    <button v-if="!exitMoveImageMode"
+@click="moveAfterImage">画像を動かす</button>
+                    <label v-if="!exitMoveImageMode" >
+                        拡大率:
+                    <input type="range"  min="50" max="300"
+value="100" @input="changeAfterScale($event)">
+                    </label>
+                    <button v-if="!exitMoveImageMode"
+@click="changeAfterScale($event, true)">拡大リセット</button>
+                </details>
+                    <button v-if="exitMoveImageMode"
+@click="exitMoveImageMode">終了</button>
+            </div>
+        </details>
+
+        <details v-bind:open="step == 2 ? true : null"  v-if="step >= 2">
+            <summary>録画</summary>
+            <button v-if="!exitMoveImageMode" @click="recode">録画</button>
+            <button v-if="!exitMoveImageMode"
+@click="funcMoveFrame()">フレーム移動確認</button>
+            <a v-if="videoUrl" v-bind:href="videoUrl"
+download="movie.webm">Download</a>
+        </details>
+        <div id="container" style="width: 100%;"></div>
+    </div>
+</body>
+</html>
